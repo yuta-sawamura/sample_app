@@ -1,7 +1,7 @@
 class PasswordResetsController < ApplicationController
-  before_action :get_user,         only: [:edit, :update]
-  before_action :valid_user,       only: [:edit, :update]
-  before_action :check_expiration, only: [:edit, :update]    # （1）への対応
+  before_action :get_user,   only: [:edit, :update]
+  before_action :valid_user, only: [:edit, :update]
+  before_action :check_expiration, only: [:edit, :update]    # (1) への対応
 
   def new
   end
@@ -23,17 +23,18 @@ class PasswordResetsController < ApplicationController
   end
 
   def update
-    if params[:user][:password].empty?                  # （3）への対応
+    if params[:user][:password].empty?                  # (3) への対応
       @user.errors.add(:password, :blank)
       render 'edit'
-    elsif @user.update(user_params)                     # （4）への対応
+    elsif @user.update(user_params)                     # (4) への対応
       log_in @user
       flash[:success] = "Password has been reset."
       redirect_to @user
     else
-      render 'edit'                                     # （2）への対応
+      render 'edit'                                     # (2) への対応
     end
   end
+
 
   private
 
@@ -49,13 +50,10 @@ class PasswordResetsController < ApplicationController
 
     # 有効なユーザーかどうか確認する
     def valid_user
-      # unless (@user && @user.activated? &&
-      #         @user.authenticated?(:reset, params[:id]))
-      #   redirect_to root_url
-      # end
-      # unless (@user)
-      #   redirect_to root_url
-      # end
+      unless (@user && @user.activated? &&
+              @user.authenticated?(:reset, params[:id]))
+        redirect_to root_url
+      end
     end
 
     # トークンが期限切れかどうか確認する
